@@ -150,7 +150,7 @@ server = function(input, output){
       coords["D", ] <- c(coords["A", "x"] - tan(theta1) * (coords["A", "y"] - coords["B", "y"]), coords["B", "y"])
       
       # Draw vertical line from coordinate D to top of image to get coordinate E
-      coords["E", ] <- c(coords["D", "x"], dim(img)[1])
+      coords["E", ] <- c(coords["D", "x"], img_height())
       
       # Draw horizontal line from coordinate E to align with coordinate B to get coordinate F
       coords["F", ] <- c(coords["B", "x"], coords["E", "y"]) 
