@@ -69,37 +69,180 @@ server = function(input, output){
       lines(values$DT[c("1", "2"), ], lty = "B5", lwd = 2)
       lines(values$DT[c("1", "3"), ], lty = "B5", lwd = 2)
       
-      linecolor <- "white"
+      linecolor <- "firebrick"
       
-      lines(values$DT[c("L", "F"), ], col = linecolor)
-      lines(values$DT[c("F", "B"), ], col = linecolor)
-      lines(values$DT[c("B", "K"), ], col = linecolor)
-      lines(values$DT[c("K", "L"), ], col = linecolor)
+      # right-hand panel boundary
+      lines(values$DT[c("L", "F"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("F", "B"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("B", "K"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("K", "L"), ], col = linecolor, lwd = 1.5)
       
-      lines(values$DT[c("Z", "V"), ], col = linecolor)
-      lines(values$DT[c("Y", "U"), ], col = linecolor)
-      lines(values$DT[c("X", "T"), ], col = linecolor)
-      lines(values$DT[c("W", "S"), ], col = linecolor)
+      # right-hand panel vertical lines
+      lines(values$DT[c("Z", "V"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("Y", "U"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("X", "T"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("W", "S"), ], col = linecolor, lwd = 1.5)
       
-      lines(values$DT[c("AE", "AA"), ], col = linecolor)
-      lines(values$DT[c("AF", "AB"), ], col = linecolor)
-      lines(values$DT[c("AG", "AC"), ], col = linecolor)
-      lines(values$DT[c("AH", "AD"), ], col = linecolor)
+      # right-hand panel horizontal lines
+      lines(values$DT[c("AE", "AA"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("AF", "AB"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("AG", "AC"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("AH", "AD"), ], col = linecolor, lwd = 1.5)
       
-      lines(values$DT[c("J", "E"), ], col = linecolor)
-      lines(values$DT[c("E", "D"), ], col = linecolor)
-      lines(values$DT[c("D", "I"), ], col = linecolor)
-      lines(values$DT[c("I", "J"), ], col = linecolor)
+      # right-hand panel grid cell horizontal labels
+      text(x = mean(values$DT[c("K", "S"), "x"]),
+           y = mean(values$DT[c("K", "S"), "y"]),
+           labels = substitute(paste(bold("1"))),
+           col = linecolor,
+           pos = 1,
+           cex = 0.8)
+      text(x = mean(values$DT[c("S", "T"), "x"]),
+           y = mean(values$DT[c("S", "T"), "y"]),
+           labels = substitute(paste(bold("2"))),
+           col = linecolor,
+           pos = 1,
+           cex = 0.8)
+      text(x = mean(values$DT[c("T", "U"), "x"]),
+           y = mean(values$DT[c("T", "U"), "y"]),
+           labels = substitute(paste(bold("3"))),
+           col = linecolor,
+           pos = 1,
+           cex = 0.8)
+      text(x = mean(values$DT[c("U", "V"), "x"]),
+           y = mean(values$DT[c("U", "V"), "y"]),
+           labels = substitute(paste(bold("4"))),
+           col = linecolor,
+           pos = 1,
+           cex = 0.8)
+      text(x = mean(values$DT[c("V", "B"), "x"]),
+           y = mean(values$DT[c("V", "B"), "y"]),
+           labels = substitute(paste(bold("5"))),
+           col = linecolor,
+           pos = 1,
+           cex = 0.8)
+
+      # right-hand panel grid cell vertical labels
+      text(x = values$DT[c("K"), "x"],
+           y = mean(values$DT[c("L", "AH"), "y"]),
+           labels = substitute(paste(bold("A"))),
+           col = linecolor,
+           pos = 2,
+           cex = 0.8)
+      text(x = values$DT[c("K"), "x"],
+           y = mean(values$DT[c("AH", "AG"), "y"]),
+           labels = substitute(paste(bold("B"))),
+           col = linecolor,
+           pos = 2,
+           cex = 0.8)
+      text(x = values$DT[c("K"), "x"],
+           y = mean(values$DT[c("AG", "AF"), "y"]),
+           labels = substitute(paste(bold("C"))),
+           col = linecolor,
+           pos = 2,
+           cex = 0.8)
+      text(x = values$DT[c("K"), "x"],
+           y = mean(values$DT[c("AF", "AE"), "y"]),
+           labels = substitute(paste(bold("D"))),
+           col = linecolor,
+           pos = 2,
+           cex = 0.8)
+      text(x = values$DT[c("K"), "x"],
+           y = mean(values$DT[c("AE", "K"), "y"]),
+           labels = substitute(paste(bold("E"))),
+           col = linecolor,
+           pos = 2,
+           cex = 0.8)
       
-      lines(values$DT[c("AT", "AP"), ], col = linecolor)
-      lines(values$DT[c("AS", "AO"), ], col = linecolor)
-      lines(values$DT[c("AR", "AN"), ], col = linecolor)
-      lines(values$DT[c("AQ", "AM"), ], col = linecolor)
+      # left-hand panel boundary
+      lines(values$DT[c("J", "E"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("E", "D"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("D", "I"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("I", "J"), ], col = linecolor, lwd = 1.5)
       
-      lines(values$DT[c("AY", "AU"), ], col = linecolor)
-      lines(values$DT[c("AZ", "AV"), ], col = linecolor)
-      lines(values$DT[c("BA", "AW"), ], col = linecolor)
-      lines(values$DT[c("BB", "AX"), ], col = linecolor)
+      # left-hand panel vertical lines
+      lines(values$DT[c("AT", "AP"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("AS", "AO"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("AR", "AN"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("AQ", "AM"), ], col = linecolor, lwd = 1.5)
+      
+      # left-hand panel horizontal lines
+      lines(values$DT[c("AY", "AU"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("AZ", "AV"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("BA", "AW"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("BB", "AX"), ], col = linecolor, lwd = 1.5)
+      
+      # left-hand panel grid cell horizontal labels
+      text(x = mean(values$DT[c("I", "AM"), "x"]),
+           y = mean(values$DT[c("I", "AM"), "y"]),
+           labels = substitute(paste(bold("6"))),
+           col = linecolor,
+           pos = 1,
+           cex = 0.8)
+      text(x = mean(values$DT[c("AM", "AN"), "x"]),
+           y = mean(values$DT[c("AM", "AN"), "y"]),
+           labels = substitute(paste(bold("7"))),
+           col = linecolor,
+           pos = 1,
+           cex = 0.8)
+      text(x = mean(values$DT[c("AN", "AO"), "x"]),
+           y = mean(values$DT[c("AN", "AO"), "y"]),
+           labels = substitute(paste(bold("8"))),
+           col = linecolor,
+           pos = 1,
+           cex = 0.8)
+      text(x = mean(values$DT[c("AO", "AP"), "x"]),
+           y = mean(values$DT[c("AO", "AP"), "y"]),
+           labels = substitute(paste(bold("9"))),
+           col = linecolor,
+           pos = 1,
+           cex = 0.8)
+      text(x = mean(values$DT[c("AP", "D"), "x"]),
+           y = mean(values$DT[c("AP", "D"), "y"]),
+           labels = substitute(paste(bold("10"))),
+           col = linecolor,
+           pos = 1,
+           cex = 0.8)
+
+      # left-hand panel grid cell vertical labels
+      text(x = values$DT[c("I"), "x"],
+           y = mean(values$DT[c("J", "BB"), "y"]),
+           labels = substitute(paste(bold("A"))),
+           col = linecolor,
+           pos = 4,
+           cex = 0.8)
+      text(x = values$DT[c("I"), "x"],
+           y = mean(values$DT[c("BB", "BA"), "y"]),
+           labels = substitute(paste(bold("B"))),
+           col = linecolor,
+           pos = 4,
+           cex = 0.8)
+      text(x = values$DT[c("I"), "x"],
+           y = mean(values$DT[c("BA", "AZ"), "y"]),
+           labels = substitute(paste(bold("C"))),
+           col = linecolor,
+           pos = 4,
+           cex = 0.8)
+      text(x = values$DT[c("I"), "x"],
+           y = mean(values$DT[c("AZ", "AY"), "y"]),
+           labels = substitute(paste(bold("D"))),
+           col = linecolor,
+           pos = 4,
+           cex = 0.8)
+      text(x = values$DT[c("I"), "x"],
+           y = mean(values$DT[c("AY", "I"), "y"]),
+           labels = substitute(paste(bold("E"))),
+           col = linecolor,
+           pos = 4,
+           cex = 0.8)
+      
+      # for(n in row.names(values$DT)) {
+      #   text(x = values$DT[n, "x"],
+      #        y = values$DT[n, "y"],
+      #        labels = substitute(paste(bold(n))),
+      #        adj = 0.5,
+      #        cex = 0.7)
+      # }
+      
     }, res = 100, width = w, height = round((w / img_width()) * img_height()))
     
   })
