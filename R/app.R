@@ -78,6 +78,27 @@ server = function(input, output){
   observe({
     output$plot <- renderPlot({
       
+      # define function for outlining text
+      stext <- function(x,
+                             y = NULL,
+                             labels,
+                             col = 'white',
+                             bg = 'black',
+                             theta = seq(pi / 4, 2 * pi, length.out = 8),
+                             r = 0.1,
+                             ...) {
+        xy <- xy.coords(x, y)
+        xo <- r * strwidth('A')
+        yo <- r * strheight('A')
+        
+        for (i in theta) {
+          text(xy$x + cos(i) * xo, xy$y + sin(i)*yo, 
+                labels, col = bg, ...)
+        }
+        
+        text(xy$x, xy$y, labels, col = col, ...)
+      }
+      
       req(img_file())
       img <- img_file()
       
@@ -107,31 +128,31 @@ server = function(input, output){
       lines(values$DT[c("AH", "AD"), ], col = input$grid_col, lwd = 1.5)
       
       # right-hand panel grid cell horizontal labels
-      text(x = mean(values$DT[c("K", "S"), "x"]),
+      stext(x = mean(values$DT[c("K", "S"), "x"]),
            y = mean(values$DT[c("K", "S"), "y"]),
            labels = substitute(paste(bold("1"))),
            col = input$grid_col,
            pos = 1,
            cex = 0.8)
-      text(x = mean(values$DT[c("S", "T"), "x"]),
+      stext(x = mean(values$DT[c("S", "T"), "x"]),
            y = mean(values$DT[c("S", "T"), "y"]),
            labels = substitute(paste(bold("2"))),
            col = input$grid_col,
            pos = 1,
            cex = 0.8)
-      text(x = mean(values$DT[c("T", "U"), "x"]),
+      stext(x = mean(values$DT[c("T", "U"), "x"]),
            y = mean(values$DT[c("T", "U"), "y"]),
            labels = substitute(paste(bold("3"))),
            col = input$grid_col,
            pos = 1,
            cex = 0.8)
-      text(x = mean(values$DT[c("U", "V"), "x"]),
+      stext(x = mean(values$DT[c("U", "V"), "x"]),
            y = mean(values$DT[c("U", "V"), "y"]),
            labels = substitute(paste(bold("4"))),
            col = input$grid_col,
            pos = 1,
            cex = 0.8)
-      text(x = mean(values$DT[c("V", "B"), "x"]),
+      stext(x = mean(values$DT[c("V", "B"), "x"]),
            y = mean(values$DT[c("V", "B"), "y"]),
            labels = substitute(paste(bold("5"))),
            col = input$grid_col,
@@ -139,31 +160,31 @@ server = function(input, output){
            cex = 0.8)
       
       # right-hand panel grid cell vertical labels
-      text(x = values$DT[c("K"), "x"],
+      stext(x = values$DT[c("K"), "x"],
            y = mean(values$DT[c("L", "AH"), "y"]),
            labels = substitute(paste(bold("A"))),
            col = input$grid_col,
            pos = 2,
            cex = 0.8)
-      text(x = values$DT[c("K"), "x"],
+      stext(x = values$DT[c("K"), "x"],
            y = mean(values$DT[c("AH", "AG"), "y"]),
            labels = substitute(paste(bold("B"))),
            col = input$grid_col,
            pos = 2,
            cex = 0.8)
-      text(x = values$DT[c("K"), "x"],
+      stext(x = values$DT[c("K"), "x"],
            y = mean(values$DT[c("AG", "AF"), "y"]),
            labels = substitute(paste(bold("C"))),
            col = input$grid_col,
            pos = 2,
            cex = 0.8)
-      text(x = values$DT[c("K"), "x"],
+      stext(x = values$DT[c("K"), "x"],
            y = mean(values$DT[c("AF", "AE"), "y"]),
            labels = substitute(paste(bold("D"))),
            col = input$grid_col,
            pos = 2,
            cex = 0.8)
-      text(x = values$DT[c("K"), "x"],
+      stext(x = values$DT[c("K"), "x"],
            y = mean(values$DT[c("AE", "K"), "y"]),
            labels = substitute(paste(bold("E"))),
            col = input$grid_col,
@@ -189,31 +210,31 @@ server = function(input, output){
       lines(values$DT[c("BB", "AX"), ], col = input$grid_col, lwd = 1.5)
       
       # left-hand panel grid cell horizontal labels
-      text(x = mean(values$DT[c("I", "AM"), "x"]),
+      stext(x = mean(values$DT[c("I", "AM"), "x"]),
            y = mean(values$DT[c("I", "AM"), "y"]),
            labels = substitute(paste(bold("6"))),
            col = input$grid_col,
            pos = 1,
            cex = 0.8)
-      text(x = mean(values$DT[c("AM", "AN"), "x"]),
+      stext(x = mean(values$DT[c("AM", "AN"), "x"]),
            y = mean(values$DT[c("AM", "AN"), "y"]),
            labels = substitute(paste(bold("7"))),
            col = input$grid_col,
            pos = 1,
            cex = 0.8)
-      text(x = mean(values$DT[c("AN", "AO"), "x"]),
+      stext(x = mean(values$DT[c("AN", "AO"), "x"]),
            y = mean(values$DT[c("AN", "AO"), "y"]),
            labels = substitute(paste(bold("8"))),
            col = input$grid_col,
            pos = 1,
            cex = 0.8)
-      text(x = mean(values$DT[c("AO", "AP"), "x"]),
+      stext(x = mean(values$DT[c("AO", "AP"), "x"]),
            y = mean(values$DT[c("AO", "AP"), "y"]),
            labels = substitute(paste(bold("9"))),
            col = input$grid_col,
            pos = 1,
            cex = 0.8)
-      text(x = mean(values$DT[c("AP", "D"), "x"]),
+      stext(x = mean(values$DT[c("AP", "D"), "x"]),
            y = mean(values$DT[c("AP", "D"), "y"]),
            labels = substitute(paste(bold("10"))),
            col = input$grid_col,
@@ -221,42 +242,42 @@ server = function(input, output){
            cex = 0.8)
       
       # left-hand panel grid cell vertical labels
-      text(x = values$DT[c("I"), "x"],
+      stext(x = values$DT[c("I"), "x"],
            y = mean(values$DT[c("J", "BB"), "y"]),
            labels = substitute(paste(bold("A"))),
            col = input$grid_col,
            pos = 4,
            cex = 0.8)
-      text(x = values$DT[c("I"), "x"],
+      stext(x = values$DT[c("I"), "x"],
            y = mean(values$DT[c("BB", "BA"), "y"]),
            labels = substitute(paste(bold("B"))),
            col = input$grid_col,
            pos = 4,
            cex = 0.8)
-      text(x = values$DT[c("I"), "x"],
+      stext(x = values$DT[c("I"), "x"],
            y = mean(values$DT[c("BA", "AZ"), "y"]),
            labels = substitute(paste(bold("C"))),
            col = input$grid_col,
            pos = 4,
            cex = 0.8)
-      text(x = values$DT[c("I"), "x"],
+      stext(x = values$DT[c("I"), "x"],
            y = mean(values$DT[c("AZ", "AY"), "y"]),
            labels = substitute(paste(bold("D"))),
            col = input$grid_col,
            pos = 4,
            cex = 0.8)
-      text(x = values$DT[c("I"), "x"],
+      stext(x = values$DT[c("I"), "x"],
            y = mean(values$DT[c("AY", "I"), "y"]),
            labels = substitute(paste(bold("E"))),
            col = input$grid_col,
            pos = 4,
            cex = 0.8)
       
-      text(x = values$DT[c("A"), "x"],
+      stext(x = values$DT[c("A"), "x"],
            y = values$DT[c("A"), "y"],
            labels = values$theta,
            col = input$grid_col,
-           cex = 1.5,
+           cex = 1.3,
            font = 2)
       
       # for(n in row.names(values$DT)) {
