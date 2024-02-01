@@ -1,26 +1,42 @@
 library(shiny)
 library(jpeg)
 library(png)
+library(colourpicker)
 
 options(shiny.maxRequestSize = 30*1024^2,
         shiny.launch.browser = .rs.invokeShinyWindowExternal)
 
 ui <- fluidPage(
-  fluidRow(column(width = 10,
-                  h4("Upload image (PNG or JPG)"),
-                  fileInput("upload", NULL, accept = "image/*"),
-                  h4("Click plot to add three points"),
-                  actionButton("rem_points", "Clear all points"),
-                  actionButton("build_grids", "Build perspective grids"),
-                  plotOutput("plot", click = "plot_click")),
-           column(width = 2,
-                  h4("Table of points on plot"),
-                  div(
-                    tableOutput("table"),
-                    tags$head(tags$style(type="text/css", "#table table td {line-height:80%}")),
-                    style = "font-size:60%"
-                  )
-           )
+  fluidRow(column(width = 3,
+                  h4("1. Upload image (PNG or JPG)"),
+                  fileInput("upload", NULL, accept = "image/*")
+                  
+  ),
+  column(width = 3,
+         h4("2. Click in plot to add three points"),
+         h6("Order is important. Select the center vanishing perspective point, then where curb intersects side of image, then where curb intersects bottom of image"),
+         actionButton("rem_points", "Clear all points")
+  ),
+  column(width = 3,
+         h4("3. Pick color for the grids & labels"),
+         colourInput(inputId = "grid_col", label = NULL, value = "firebrick")
+  ),
+  column(width = 3,
+         h4("4. Construct the perspective grids"),
+         actionButton("build_grids", "Build")
+  )
+  ),
+  fluidRow(column(width = 12,
+                  plotOutput("plot", click = "plot_click")
+  )#,
+  # column(width = 2,
+  #        h4("Table of points on plot"),
+  #        div(
+  #          tableOutput("table"),
+  #          tags$head(tags$style(type="text/css", "#table table td {line-height:80%}")),
+  #          style = "font-size:60%"
+  #        )
+  # )
   )
 )
 # div(tableOutput("table")), style = "font-size:60%; padding-top:0px; padding-bottom:0px;"))
@@ -31,6 +47,7 @@ server = function(input, output){
   values <- reactiveValues()
   values$DT <- data.frame(x = numeric(),
                           y = numeric())
+  values$theta <- 0
   
   ## 2. load up image and set dimension parameters##
   img_file <- reactive({
@@ -69,171 +86,178 @@ server = function(input, output){
       lines(values$DT[c("1", "2"), ], lty = "B5", lwd = 2)
       lines(values$DT[c("1", "3"), ], lty = "B5", lwd = 2)
       
-      linecolor <- "firebrick"
+      #linecolor <- "firebrick"
       
       # right-hand panel boundary
-      lines(values$DT[c("L", "F"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("F", "B"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("B", "K"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("K", "L"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("L", "F"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("F", "B"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("B", "K"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("K", "L"), ], col = input$grid_col, lwd = 1.5)
       
       # right-hand panel vertical lines
-      lines(values$DT[c("Z", "V"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("Y", "U"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("X", "T"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("W", "S"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("Z", "V"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("Y", "U"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("X", "T"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("W", "S"), ], col = input$grid_col, lwd = 1.5)
       
       # right-hand panel horizontal lines
-      lines(values$DT[c("AE", "AA"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("AF", "AB"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("AG", "AC"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("AH", "AD"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("AE", "AA"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("AF", "AB"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("AG", "AC"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("AH", "AD"), ], col = input$grid_col, lwd = 1.5)
       
       # right-hand panel grid cell horizontal labels
       text(x = mean(values$DT[c("K", "S"), "x"]),
            y = mean(values$DT[c("K", "S"), "y"]),
            labels = substitute(paste(bold("1"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 1,
            cex = 0.8)
       text(x = mean(values$DT[c("S", "T"), "x"]),
            y = mean(values$DT[c("S", "T"), "y"]),
            labels = substitute(paste(bold("2"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 1,
            cex = 0.8)
       text(x = mean(values$DT[c("T", "U"), "x"]),
            y = mean(values$DT[c("T", "U"), "y"]),
            labels = substitute(paste(bold("3"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 1,
            cex = 0.8)
       text(x = mean(values$DT[c("U", "V"), "x"]),
            y = mean(values$DT[c("U", "V"), "y"]),
            labels = substitute(paste(bold("4"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 1,
            cex = 0.8)
       text(x = mean(values$DT[c("V", "B"), "x"]),
            y = mean(values$DT[c("V", "B"), "y"]),
            labels = substitute(paste(bold("5"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 1,
            cex = 0.8)
-
+      
       # right-hand panel grid cell vertical labels
       text(x = values$DT[c("K"), "x"],
            y = mean(values$DT[c("L", "AH"), "y"]),
            labels = substitute(paste(bold("A"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 2,
            cex = 0.8)
       text(x = values$DT[c("K"), "x"],
            y = mean(values$DT[c("AH", "AG"), "y"]),
            labels = substitute(paste(bold("B"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 2,
            cex = 0.8)
       text(x = values$DT[c("K"), "x"],
            y = mean(values$DT[c("AG", "AF"), "y"]),
            labels = substitute(paste(bold("C"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 2,
            cex = 0.8)
       text(x = values$DT[c("K"), "x"],
            y = mean(values$DT[c("AF", "AE"), "y"]),
            labels = substitute(paste(bold("D"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 2,
            cex = 0.8)
       text(x = values$DT[c("K"), "x"],
            y = mean(values$DT[c("AE", "K"), "y"]),
            labels = substitute(paste(bold("E"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 2,
            cex = 0.8)
       
       # left-hand panel boundary
-      lines(values$DT[c("J", "E"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("E", "D"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("D", "I"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("I", "J"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("J", "E"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("E", "D"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("D", "I"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("I", "J"), ], col = input$grid_col, lwd = 1.5)
       
       # left-hand panel vertical lines
-      lines(values$DT[c("AT", "AP"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("AS", "AO"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("AR", "AN"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("AQ", "AM"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("AT", "AP"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("AS", "AO"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("AR", "AN"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("AQ", "AM"), ], col = input$grid_col, lwd = 1.5)
       
       # left-hand panel horizontal lines
-      lines(values$DT[c("AY", "AU"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("AZ", "AV"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("BA", "AW"), ], col = linecolor, lwd = 1.5)
-      lines(values$DT[c("BB", "AX"), ], col = linecolor, lwd = 1.5)
+      lines(values$DT[c("AY", "AU"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("AZ", "AV"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("BA", "AW"), ], col = input$grid_col, lwd = 1.5)
+      lines(values$DT[c("BB", "AX"), ], col = input$grid_col, lwd = 1.5)
       
       # left-hand panel grid cell horizontal labels
       text(x = mean(values$DT[c("I", "AM"), "x"]),
            y = mean(values$DT[c("I", "AM"), "y"]),
            labels = substitute(paste(bold("6"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 1,
            cex = 0.8)
       text(x = mean(values$DT[c("AM", "AN"), "x"]),
            y = mean(values$DT[c("AM", "AN"), "y"]),
            labels = substitute(paste(bold("7"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 1,
            cex = 0.8)
       text(x = mean(values$DT[c("AN", "AO"), "x"]),
            y = mean(values$DT[c("AN", "AO"), "y"]),
            labels = substitute(paste(bold("8"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 1,
            cex = 0.8)
       text(x = mean(values$DT[c("AO", "AP"), "x"]),
            y = mean(values$DT[c("AO", "AP"), "y"]),
            labels = substitute(paste(bold("9"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 1,
            cex = 0.8)
       text(x = mean(values$DT[c("AP", "D"), "x"]),
            y = mean(values$DT[c("AP", "D"), "y"]),
            labels = substitute(paste(bold("10"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 1,
            cex = 0.8)
-
+      
       # left-hand panel grid cell vertical labels
       text(x = values$DT[c("I"), "x"],
            y = mean(values$DT[c("J", "BB"), "y"]),
            labels = substitute(paste(bold("A"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 4,
            cex = 0.8)
       text(x = values$DT[c("I"), "x"],
            y = mean(values$DT[c("BB", "BA"), "y"]),
            labels = substitute(paste(bold("B"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 4,
            cex = 0.8)
       text(x = values$DT[c("I"), "x"],
            y = mean(values$DT[c("BA", "AZ"), "y"]),
            labels = substitute(paste(bold("C"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 4,
            cex = 0.8)
       text(x = values$DT[c("I"), "x"],
            y = mean(values$DT[c("AZ", "AY"), "y"]),
            labels = substitute(paste(bold("D"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 4,
            cex = 0.8)
       text(x = values$DT[c("I"), "x"],
            y = mean(values$DT[c("AY", "I"), "y"]),
            labels = substitute(paste(bold("E"))),
-           col = linecolor,
+           col = input$grid_col,
            pos = 4,
            cex = 0.8)
+      
+      text(x = values$DT[c("A"), "x"],
+           y = values$DT[c("A"), "y"],
+           labels = values$theta,
+           col = input$grid_col,
+           cex = 1.5,
+           font = 2)
       
       # for(n in row.names(values$DT)) {
       #   text(x = values$DT[n, "x"],
@@ -256,7 +280,7 @@ server = function(input, output){
     values$DT <- rbind(values$DT, add_row)
   })
   
-  ## 5. remove row on actionButton click ##
+  ## 5. remove points on actionButton click ##
   observeEvent(input$rem_points, {
     rem_row <- values$DT[-c(1:nrow(values$DT)), ]
     values$DT <- rem_row
@@ -287,7 +311,7 @@ server = function(input, output){
       coords$y[1:3] <- values$DT$y
       
       # Determine angle between normal and coordinate C from coordinate A
-      theta1 <- atan((coords["A", "x"] - coords["C", "x"]) / coords["A", "y"])
+      theta1 <- atan((coords["A", "x"] - coords["C", "x"]) / (coords["A", "y"] - coords["C", "y"]))
       
       # Determine coordinate D
       coords["D", ] <- c(coords["A", "x"] - tan(theta1) * (coords["A", "y"] - coords["B", "y"]), coords["B", "y"])
@@ -431,6 +455,7 @@ server = function(input, output){
       }
       
       values$DT <- coords
+      values$theta <- round((theta1 * 180 / pi) + (theta3 * 180 / pi), 0)
     }
   })
   
